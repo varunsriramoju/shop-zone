@@ -248,8 +248,8 @@
   
  ```bash 
  # Clone the repository 
- git clone https://github.com/varunsriramoju/product-inventory-app.git
- cd product-inventory-app/shopzone-backend 
+ git clone https://github.com/varunsriramoju/shop-zone.git
+ cd shop-zone/shopzone-backend 
   
  # Build & run 
  ./mvnw clean install 
