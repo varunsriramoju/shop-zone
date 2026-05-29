@@ -41,55 +41,55 @@
  <br/> 
   
  ### 🏠 Hero / Landing Page 
- ![Hero Page](screenshots/hero.png) 
+ ![Hero Page](Screenshots/hero.png) 
  > *Glassmorphic dark landing page with animated feature highlights — Ultra Fast Dispatch, Encrypted Checkouts, Signature Quality.* 
   
  --- 
   
  ### 🔐 Login & Authentication 
- ![Login Page](screenshots/login.png) 
+ ![Login Page](Screenshots/login.png) 
  > *Elegant "Welcome Back" login modal with gradient sign-in button and JWT-powered session management.* 
   
  --- 
   
  ### 🛍️ Product Catalog 
- ![Shop Page](screenshots/shop.png) 
+ ![Shop Page](Screenshots/shop.png) 
  > *Dynamic product grid with live images, pricing, and "View Details" — powered by the public `/api/products` endpoint.* 
   
  --- 
   
  ### 🛒 Your Basket 
- ![Cart Page](screenshots/cart.png) 
+ ![Cart Page](Screenshots/cart.png) 
  > *Real-time cart with quantity controls, live subtotal, free shipping badge, and one-click checkout flow.* 
   
  --- 
   
  ### 💳 Secure Checkout 
- ![Checkout Page](screenshots/checkout.png) 
+ ![Checkout Page](Screenshots/checkout.png) 
  > *Order review with shipping address input, grand total summary, and confirm order — clean and trustworthy.* 
   
  --- 
   
  ### 📦 Your Orders 
- ![Orders Page](screenshots/orders.png) 
+ ![Orders Page](Screenshots/orders.png) 
  > *User order history with status badges (PENDING / SHIPPED / DELIVERED), timestamps, and cancel functionality.* 
   
  --- 
   
  ### 🛠️ Admin — Admin Portal 
- ![Admin Dashboard](screenshots/admin-dashboard.png) 
+ ![Admin Dashboard](Screenshots/admin-dashboard.png) 
  > *Real-time dashboard showing active products, total orders, and gross revenue with management quicklinks.* 
   
  --- 
   
  ### 📋 Admin — Catalog Management 
- ![Catalog Management](screenshots/catalog-management.png) 
+ ![Catalog Management](Screenshots/catalog-management.png) 
  > *Add/edit/delete products with a live Catalog Registry panel — full CRUD for the product inventory.* 
   
  --- 
   
  ### 📬 Admin — Order Management 
- ![Order Management](screenshots/order-management.png) 
+ ![Order Management](Screenshots/order-management.png) 
  > *Admin order table with inline status dropdowns (Pending → Shipped → Delivered) and delete controls.* 
   
  --- 
