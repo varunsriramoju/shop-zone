@@ -16,10 +16,12 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    public String generateToken(String email) {
+    public String generateToken(com.shopzone.shopzone_backend.model.User user) {
         SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         return Jwts.builder()
-            .subject(email)
+            .subject(user.getEmail())
+            .claim("role", user.getRole().name())
+            .claim("name", user.getName())
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
             .signWith(key)

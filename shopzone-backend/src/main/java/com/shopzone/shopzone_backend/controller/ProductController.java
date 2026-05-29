@@ -10,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -26,7 +27,7 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "created_at") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir) {
         return ResponseEntity.ok(
             productService.searchProducts(name, categoryId, minPrice, maxPrice,
@@ -39,7 +40,7 @@ public class ProductController {
     }
 
     @PostMapping
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(request));
     }
@@ -56,5 +57,11 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // NEW: Return all products as a simple list for public shop page
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 }

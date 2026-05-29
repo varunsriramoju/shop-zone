@@ -1,5 +1,6 @@
 package com.shopzone.shopzone_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -33,8 +34,10 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @PrePersist

@@ -8,6 +8,8 @@ import com.shopzone.shopzone_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 
 @Service
@@ -21,9 +23,12 @@ public class ProductService {
             BigDecimal minPrice, BigDecimal maxPrice,
             int page, int size, String sortBy, String sortDir) {
 
+        // Native SQL uses DB column names (snake_case), not JPA field names
+        String sortColumn = "createdAt".equals(sortBy) ? "created_at" : sortBy;
+
         Sort sort = sortDir.equalsIgnoreCase("asc")
-            ? Sort.by(sortBy).ascending()
-            : Sort.by(sortBy).descending();
+            ? Sort.by(sortColumn).ascending()
+            : Sort.by(sortColumn).descending();
 
         Pageable pageable = PageRequest.of(page, size, sort);
         return productRepository.searchProducts(name, categoryId, minPrice, maxPrice, pageable)
@@ -63,6 +68,14 @@ public class ProductService {
     public void delete(Long id) {
         productRepository.delete(productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + id)));
+    }
+
+    // NEW: Return all products as a simple list for public shop page
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     private ProductResponse toResponse(Product p) {
