@@ -29,7 +29,19 @@ const ManageOrders = () => {
       showToast(`Order #${orderId} status updated to ${newStatus}!`, 'success');
     } catch (err) {
       console.error(err);
-      showToast('Failed to update order status', 'error');
+      showToast(err.response?.data?.message || 'Failed to update order status', 'error');
+    }
+  };
+
+  const handleDelete = async (orderId) => {
+    if (!window.confirm(`Delete order #${orderId}? This cannot be undone.`)) return;
+    try {
+      await orderApi.delete(orderId);
+      setOrders(prev => prev.filter(o => o.id !== orderId));
+      showToast(`Order #${orderId} deleted`, 'info');
+    } catch (err) {
+      console.error(err);
+      showToast(err.response?.data?.message || 'Failed to delete order', 'error');
     }
   };
 
@@ -70,23 +82,33 @@ const ManageOrders = () => {
                     ${(o.totalAmount || o.total || 0).toFixed(2)}
                   </td>
                   <td style={{ padding: '1.25rem 1rem' }}>
-                    <span className={`badge ${o.status === 'SHIPPED' || o.status === 'DELIVERED' ? 'badge-success' : 'badge-pending'}`}>
+                    <span className={`badge ${o.status === 'SHIPPED' || o.status === 'DELIVERED' ? 'badge-success' : o.status === 'CANCELLED' ? 'badge-pending' : 'badge-pending'}`}>
                       {o.status || 'PENDING'}
                     </span>
                   </td>
                   <td style={{ padding: '1.25rem 1rem', textAlign: 'right' }}>
-                    <select 
-                      value={o.status || 'PENDING'}
-                      onChange={(e) => handleStatusChange(o.id, e.target.value)}
-                      className="form-input"
-                      style={{ maxWidth: '150px', display: 'inline-block', padding: '0.4rem 0.5rem', fontSize: '0.85rem' }}
-                    >
-                      <option value="PENDING">Pending</option>
-                      <option value="PROCESSING">Processing</option>
-                      <option value="SHIPPED">Shipped</option>
-                      <option value="DELIVERED">Delivered</option>
-                      <option value="CANCELLED">Cancelled</option>
-                    </select>
+                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', flexWrap: 'wrap', alignItems: 'center' }}>
+                      <select
+                        value={o.status || 'PENDING'}
+                        onChange={(e) => handleStatusChange(o.id, e.target.value)}
+                        className="form-input"
+                        style={{ maxWidth: '150px', padding: '0.4rem 0.5rem', fontSize: '0.85rem' }}
+                        disabled={o.status === 'CANCELLED'}
+                      >
+                        <option value="PENDING">Pending</option>
+                        <option value="PROCESSING">Processing</option>
+                        <option value="SHIPPED">Shipped</option>
+                        <option value="DELIVERED">Delivered</option>
+                        <option value="CANCELLED">Cancelled</option>
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(o.id)}
+                        className="btn btn-danger btn-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

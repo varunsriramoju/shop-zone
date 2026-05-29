@@ -71,7 +71,8 @@ const ManageProducts = () => {
       fetchProducts();
     } catch (err) {
       console.error(err);
-      showToast('Could not delete product', 'error');
+      const errorMsg = err.response?.data?.message || 'Could not delete product. It might be linked to existing orders.';
+      showToast(errorMsg, 'error');
     }
   };
 

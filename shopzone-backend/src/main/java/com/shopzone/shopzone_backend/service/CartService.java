@@ -39,8 +39,14 @@ public class CartService {
 
         cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
             .ifPresentOrElse(
-                item -> { item.setQuantity(item.getQuantity() + quantity);
-                          cartItemRepository.save(item); },
+                item -> { 
+                    int newQuantity = item.getQuantity() + quantity;
+                    if (product.getStock() < newQuantity) {
+                        throw new BadRequestException("Only " + product.getStock() + " units available. You already have " + item.getQuantity() + " in cart.");
+                    }
+                    item.setQuantity(newQuantity);
+                    cartItemRepository.save(item); 
+                },
                 () -> cartItemRepository.save(
                     CartItem.builder().cart(cart).product(product).quantity(quantity).build())
             );
@@ -55,6 +61,9 @@ public class CartService {
         if (quantity <= 0) {
             cartItemRepository.delete(item);
         } else {
+            if (item.getProduct().getStock() < quantity) {
+                throw new BadRequestException("Only " + item.getProduct().getStock() + " units available for: " + item.getProduct().getName());
+            }
             item.setQuantity(quantity);
             cartItemRepository.save(item);
         }

@@ -73,11 +73,46 @@ public class OrderService {
     public Order updateStatus(Long orderId, Order.OrderStatus status) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
+        if (order.getStatus() == Order.OrderStatus.CANCELLED) {
+            throw new BadRequestException("Cannot update status of a cancelled order.");
+        }
         order.setStatus(status);
         return orderRepository.save(order);
     }
 
+    @Transactional
+    public Order cancelOrder(Long userId, Long orderId) {
+        Order order = getOrderById(orderId, userId);
+        if (order.getStatus() != Order.OrderStatus.PENDING
+                && order.getStatus() != Order.OrderStatus.PROCESSING) {
+            throw new BadRequestException(
+                "Only pending or processing orders can be cancelled.");
+        }
+        restoreStock(order);
+        order.setStatus(Order.OrderStatus.CANCELLED);
+        return orderRepository.save(order);
+    }
+
+    @Transactional
+    public void deleteOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
+        if (order.getStatus() == Order.OrderStatus.PENDING
+                || order.getStatus() == Order.OrderStatus.PROCESSING) {
+            restoreStock(order);
+        }
+        orderRepository.delete(order);
+    }
+
     public List<Order> getAllOrders() {
         return orderRepository.findAll(Sort.by("createdAt").descending());
+    }
+
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getItems()) {
+            Product product = item.getProduct();
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
+        }
     }
 }

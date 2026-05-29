@@ -49,6 +49,19 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateStatus(id, status));
     }
 
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<Order> cancelOrder(@RequestHeader("Authorization") String auth,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(orderService.cancelOrder(getUserId(auth), id));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Order>> getAllOrders() {
