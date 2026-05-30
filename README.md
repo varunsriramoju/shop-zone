@@ -295,7 +295,7 @@
  ## 📁 Project Structure 
   
  ``` 
- product-inventory-app/ 
+ shop-zone/ 
  ├── shopzone-backend/ 
  │   ├── src/main/java/com/shopzone/shopzone_backend/ 
  │   │   ├── config/          # Security, JWT, CORS config 
